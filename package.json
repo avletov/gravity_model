@@ -2,7 +2,7 @@
   "name": "gravity_model",
   "version": "1.0.0",
   "description": "Данное приложение позволяет моделировать гравитационное взаимодействие (по закону всемирного тяготения Ньютона) между произвольным количеством тел (материальных точек) в пространстве с двумя координатами: x и y.",
-  "main": "webpack.config.js",
+  "main": "src/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server --hot --open",
