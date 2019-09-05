@@ -3,11 +3,13 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   height: 100%;
-  font-family: "Roboto";
+  width: 100%;
+  font-family: "Open Sans";
 
   & > div:nth-child(1) {
     height: 100%;
     width: 315px;
+    flex-shrink: 0;
   }
 `;
 

@@ -84,7 +84,11 @@ export function calcNewCoordsAndSpeeds(data, frequency = 1) {
 }
 
 //Отображаемый формат данных в форме
-export function numberFormatter(name, num) {
+export function numberFormatter(name, num, isFocus) {
+  if (isFocus) {
+    return;
+  }
+
   const module = Math.abs(num);
 
   if (module === 0) {
@@ -94,11 +98,11 @@ export function numberFormatter(name, num) {
     return (Math.round(num * 1000) / 1000).toFixed(3);
   }
 
-  if (module >= 1e6 || module <= 1e-6) {
+  if (module >= 1e6 || module < 1e-3) {
     return num.toExponential(3);
   }
 
-  if (module >= 1e3 || module <= 1e-3) {
+  if (module >= 1e3) {
     return Math.round(num);
   }
 
@@ -130,15 +134,15 @@ export function getParamsForNewBody(number) {
 export function getUnitOfMeasurement(name) {
   switch (name) {
     case "G":
-      return ["H·м", "·кг"];
+      return ", H·м²·кг⁻²";
     case "m":
-      return "кг";
+      return ", кг";
     case "x":
     case "y":
-      return "м";
+      return ", м";
     case "vx":
     case "vy":
-      return "м/с";
+      return ", м/с";
     default:
       return "";
   }
@@ -283,4 +287,8 @@ export function getParamsForRuler(scale, widthRulerBlock = 100) {
   }
 
   return { scaleValue, rulerWidth };
+}
+
+export function objectClone(data) {
+  return JSON.parse(JSON.stringify(data));
 }
