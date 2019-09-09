@@ -11,7 +11,7 @@ export const Container = styled.div`
 `;
 
 export const Ruler = styled.div`
-  width: 100px;
+  width: ${props => props.width};
   height: 2px;
   background-color: rgb(50, 50, 50);
   border: 1px solid rgb(100, 100, 100);

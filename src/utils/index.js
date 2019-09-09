@@ -37,15 +37,16 @@ export function calcForseAxial(G, m1, m2, x1, x2, y1, y2, axis) {
 export function calcNewCoordsAndSpeeds(data, frequency = 1) {
   const { common, physicalConstants, bodies } = data;
   const numberOfBodies = bodies.length;
-  let { m, x, y, vx, vy } = getPhysicalParameters(data);
 
   const { G, T } = physicalConstants;
-  const dt = (common.dt * T) / frequency;
+  const dt = common.dt * T;
 
   for (let iter = 0; iter < frequency; iter++) {
+    let { m, x, y, vx, vy } = getPhysicalParameters(data);
+
     for (let i = 0; i < numberOfBodies; i++) {
-      const fx_i = 0;
-      const fy_i = 0;
+      let fx_i = 0;
+      let fy_i = 0;
 
       for (let j = 0; j < numberOfBodies; j++) {
         if (i === j) {
@@ -155,7 +156,7 @@ export function getNewScaleAndPosition(common, event) {
   const { clientWidth, clientHeight } = document.getElementById("field");
 
   const cx = clientX - 315 - clientWidth / 2;
-  const cy = clientY + clientHeight / 2;
+  const cy = -clientY + clientHeight / 2;
 
   const zoomInScaleFactor = 1.25;
   const zoomInOffsetFactor = 0.25;
@@ -252,7 +253,7 @@ export function getParamsForRuler(scale, widthRulerBlock = 100) {
   const logLength = Math.log10(widthRulerBlock / scale);
   const logLengthFloor = Math.floor(logLength);
 
-  const rulerWidth = `${Math.round(Math.pow(10, logLengthFloor + 2)) /
+  const rulerWidth = `${Math.pow(10, logLengthFloor + 2) /
     Math.pow(10, logLength)}px`;
 
   let scaleValue;
@@ -260,7 +261,7 @@ export function getParamsForRuler(scale, widthRulerBlock = 100) {
   if (logLengthFloor < -3) {
     scaleValue = {
       value: 10,
-      power: logLength,
+      power: logLengthFloor,
       unit: `м`
     };
   } else if (logLengthFloor < 0) {
@@ -287,6 +288,22 @@ export function getParamsForRuler(scale, widthRulerBlock = 100) {
   }
 
   return { scaleValue, rulerWidth };
+}
+
+export function getBodyPosition(body, common) {
+  const { x, y } = body.physical;
+  const { scale, posX, posY } = common;
+  const translateX = x * scale + posX;
+  const translateY = -y * scale + posY;
+
+  return { translateX, translateY };
+}
+
+export function getBodyRadius(radius, scale) {
+  if (radius * scale * 2 > 5) {
+    return radius * scale * 2;
+  }
+  return 5;
 }
 
 export function objectClone(data) {

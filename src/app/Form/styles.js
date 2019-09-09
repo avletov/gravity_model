@@ -79,10 +79,6 @@ export const Code = styled.sub`
   font-size: 11px;
 `;
 
-export const Power = styled.sup`
-  font-size: 11px;
-`;
-
 export const Value = styled.input`
   margin-bottom: 1px;
   text-align: center;

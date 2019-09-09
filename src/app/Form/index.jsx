@@ -8,7 +8,6 @@ import {
   Parameter,
   Name,
   Code,
-  Power,
   Value
 } from "./styles";
 
@@ -65,11 +64,11 @@ export class Form extends Component {
   };
 
   onFocus = () => {
-    this.setState(state => (state.isFocus = true));
+    this.setState({ isFocus: true });
   };
 
   onBlur = () => {
-    this.setState(state => (state.isFocus = false));
+    this.setState({ isFocus: false });
   };
 
   render() {

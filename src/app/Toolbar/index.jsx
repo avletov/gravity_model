@@ -1,6 +1,14 @@
 import React, { PureComponent } from "react";
 
 import { Container, Button, StartButton, Menu, List, Item } from "./styles";
+import {
+  parametersDefault,
+  parametersSolar,
+  parametersAlphaCentauri,
+  parametersAntares,
+  parametersSirius
+} from "../../mock/data";
+import { objectClone } from "../../utils";
 
 export class Toolbar extends PureComponent {
   constructor(props) {
@@ -9,35 +17,93 @@ export class Toolbar extends PureComponent {
   }
 
   onClickStart = () => {
-    this.setState(state => ({
-      isRunning: !state.isRunning
+    const { run, stop } = this.props;
+    const { isRunning } = this.state;
+
+    isRunning ? stop() : run();
+
+    this.setState(({ isRunning }) => ({
+      isRunning: !isRunning
     }));
   };
 
+  onClickAdd = () => {
+    const { setNewBody } = this.props;
+
+    setNewBody();
+  };
+
+  onClickReset = () => {
+    const { isRunning } = this.state;
+    const { setCustomData } = this.props;
+
+    isRunning ? this.onClickStart() : null;
+    setCustomData(objectClone(parametersDefault));
+  };
+
   onClickSettings = () => {
-    this.setState(state => ({
-      isShowMenu: !state.isShowMenu
+    const { isRunning } = this.state;
+
+    isRunning ? this.onClickStart() : null;
+
+    this.setState(({ isShowMenu }) => ({
+      isShowMenu: !isShowMenu
     }));
+  };
+
+  onClickMenuList = data => {
+    const { setCustomData } = this.props;
+
+    setCustomData(objectClone(data));
+
+    this.setState({
+      isShowMenu: false
+    });
   };
 
   render() {
     const { isRunning, isShowMenu } = this.state;
+
+    const dataList = [
+      {
+        name: "Солнечная система",
+        data: parametersSolar,
+        id: "parametersSolar"
+      },
+      {
+        name: "Альфа Центавра",
+        data: parametersAlphaCentauri,
+        id: "parametersAlphaCentauri"
+      },
+      {
+        name: "Антарес",
+        data: parametersAntares,
+        id: "parametersAntares"
+      },
+      {
+        name: "Сириус",
+        data: parametersSirius,
+        id: "parametersSirius"
+      }
+    ];
 
     return (
       <Container>
         <StartButton onClick={this.onClickStart} isPressed={isRunning}>
           {isRunning ? "Пауза" : "Старт"}
         </StartButton>
-        <Button>Добавить</Button>
-        <Button>Сброс</Button>
+        <Button onClick={this.onClickAdd}>Добавить</Button>
+        <Button onClick={this.onClickReset}>Сброс</Button>
         <Button onClick={this.onClickSettings}>Настройки</Button>
         <Menu isShow={isShowMenu}>
           <List>
-            <Item>1 пункт меню</Item>
-            <Item>2 пункт меню</Item>
-            <Item>3 пункт меню</Item>
-            <Item>4 пункт меню</Item>
-            <Item>5 пункт меню</Item>
+            {dataList.map(({ name, data, id }) => {
+              return (
+                <Item key={id} onClick={this.onClickMenuList.bind(null, data)}>
+                  {name}
+                </Item>
+              );
+            })}
           </List>
         </Menu>
       </Container>

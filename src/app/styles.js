@@ -5,6 +5,7 @@ export const Container = styled.div`
   height: 100%;
   width: 100%;
   font-family: "Open Sans";
+  overflow: hidden;
 
   & > div:nth-child(1) {
     height: 100%;
@@ -15,6 +16,7 @@ export const Container = styled.div`
 
 export const Panel = styled.div`
   background-color: rgb(60, 60, 60);
+  overflow: auto;
 `;
 
 export const Main = styled.div`

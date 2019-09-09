@@ -9,7 +9,13 @@ import { Timer } from "./Timer";
 import { ScaleRuler } from "./ScaleRuler";
 
 import { parametersDefault } from "../mock/data";
-import { objectClone } from "../utils";
+import {
+  objectClone,
+  getParamsForNewBody,
+  calcNewCoordsAndSpeeds,
+  getNewScaleAndPosition,
+  getNewPosition
+} from "../utils";
 
 export default class App extends Component {
   constructor(props) {
@@ -37,18 +43,74 @@ export default class App extends Component {
       : this.physicalConstantsUpdate(name, value);
   };
 
+  run = () => {
+    this.timerID = setInterval(() => {
+      this.setState(state => ({
+        data: calcNewCoordsAndSpeeds(state.data, 40)
+      }));
+    }, 40);
+  };
+
+  stop = () => {
+    clearInterval(this.timerID);
+  };
+
+  setNewBody = () => {
+    const { bodies } = this.state.data;
+    const index = bodies.length;
+
+    this.setState(state => (bodies[index] = getParamsForNewBody(index + 1)));
+  };
+
+  setCustomData = customData => {
+    this.setState(state => (state.data = customData));
+  };
+
+  changeScale = () => {
+    const { common } = this.state.data;
+    const newParams = getNewScaleAndPosition(common, event);
+
+    this.setState(
+      state => (
+        (common.scale = newParams.scale),
+        (common.posX = newParams.posX),
+        (common.posY = newParams.posY)
+      )
+    );
+  };
+
+  changePosition = () => {
+    const { common } = this.state.data;
+    const newParams = getNewPosition(common, event);
+
+    this.setState(
+      state => ((common.posX = newParams.posX), (common.posY = newParams.posY))
+    );
+  };
+
   render() {
     const { data } = this.state;
+    const { time, scale } = data.common;
+
     return (
       <Container>
         <Panel>
-          <Toolbar />
+          <Toolbar
+            run={this.run}
+            stop={this.stop}
+            setNewBody={this.setNewBody}
+            setCustomData={this.setCustomData}
+          />
           <Form data={data} onChange={this.onChange} />
         </Panel>
         <Main>
-          <Field />
-          <Timer />
-          <ScaleRuler />
+          <Field
+            data={data}
+            changeScale={this.changeScale}
+            changePosition={this.changePosition}
+          />
+          <Timer timeInMilliseconds={time} />
+          <ScaleRuler scale={scale} />
         </Main>
       </Container>
     );
